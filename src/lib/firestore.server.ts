@@ -12,6 +12,7 @@ import {
 	type Query,
 } from "firebase/firestore/lite";
 
+import { dev } from "$app/environment";
 import { env } from "$env/dynamic/private";
 import { building } from "$app/environment";
 
@@ -19,10 +20,12 @@ type User = { name: string; discordUID: string };
 type Offer = { description: string };
 
 const init = () => {
-	try {
-		deleteApp(getApp());
-	} catch {
-		// Do nothing
+	if (dev) {
+		try {
+			deleteApp(getApp());
+		} catch {
+			// Do nothing
+		}
 	}
 	const app = initializeApp(JSON.parse(env.VITE_FIREBASE_CONFIG));
 	const db = getFirestore(app);
@@ -94,11 +97,7 @@ export const createOffer = async (userID: string, description: string) => {
 
 export const listOffers = async (
 	userID?: string,
-): Promise<
-	(typeof userID extends string
-		? { id: string } & Offer
-		: { id: string; userID?: string } & Offer)[]
-> => {
+): Promise<({ id: string; userID?: string } & Offer)[]> => {
 	if (userID) {
 		const offers = collection(doc(firebase.users, userID), "offers") as CollectionReference<Offer>;
 		const result = await getDocs(offers);
@@ -106,6 +105,7 @@ export const listOffers = async (
 		return result.docs.map((r) => ({
 			id: r.id,
 			...r.data(),
+			userID,
 		}));
 	} else {
 		const result = await getDocs(firebase.allOffers);
