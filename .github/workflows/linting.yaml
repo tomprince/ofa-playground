@@ -40,6 +40,9 @@ jobs:
       - name: Install dependencies
         run: |-
           npm ci
+      - name: Copy example env
+        run: |-
+          cp .env.example .env
       - name: Svelte check
         run: |-
           npm run check
