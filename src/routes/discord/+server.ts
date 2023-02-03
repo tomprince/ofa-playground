@@ -3,7 +3,7 @@ import type { RequestHandler } from "./$types";
 import { error, json } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 
-import { addUser, createOffer, getUserFromDiscord } from "$lib/airtable.server";
+import { addUser, createOffer, getUserFromDiscord } from "$lib/firestore.server";
 import {
 	ApplicationCommandType,
 	InteractionResponseType,
@@ -52,6 +52,13 @@ export const POST: RequestHandler = async ({ request }) => {
 		switch (data.name) {
 			case "ping": {
 				return channelMessage("pong");
+			}
+			case "whoami": {
+				if (user) {
+					return channelMessage(`You are ${user.name}.`);
+				} else {
+					return channelMessage("You have not registerd.");
+				}
 			}
 			case "register": {
 				if (user) {
