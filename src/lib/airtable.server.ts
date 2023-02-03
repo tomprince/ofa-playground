@@ -1,8 +1,11 @@
 import Airtable, { type FieldSet } from "airtable";
 import { env } from "$env/dynamic/private";
 import type { QueryParams } from "airtable/lib/query_params";
+import { building } from "$app/environment";
 
-const base = new Airtable({ apiKey: env.VITE_AIRTABLE_TOKEN }).base(env.VITE_AIRTABLE_BASE);
+const base =
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	!building ? new Airtable({ apiKey: env.VITE_AIRTABLE_TOKEN }).base(env.VITE_AIRTABLE_BASE) : null!;
 
 export const addUser = async (name: string, discordId: string) => {
 	// @ts-expect-error Bad types in upstream library.
