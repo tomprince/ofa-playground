@@ -10,7 +10,7 @@ const base = !building
 
 export const addUser = async (name: string, discordId: string) => {
 	// @ts-expect-error Bad types in upstream library.
-	base("Users").update(
+	base("users").update(
 		[
 			{
 				fields: { name: name, discordUID: discordId },
@@ -27,7 +27,7 @@ const airtableEscapeString = (val: string) => {
 export const getUserFromDiscord = async (
 	discordId: string,
 ): Promise<{ id: string; name: string } | null> => {
-	const result = await base("Users")
+	const result = await base("users")
 		.select({
 			fields: ["name"],
 			maxRecords: 1,
@@ -42,7 +42,7 @@ export const getUserFromDiscord = async (
 };
 
 export const getUser = async (userID: string) => {
-	const r = await base("Users").find(userID);
+	const r = await base("users").find(userID);
 	return {
 		id: r.id,
 		name: r.fields.name as string,
@@ -51,9 +51,9 @@ export const getUser = async (userID: string) => {
 };
 
 export const listUsers = async () => {
-	const result = await base("Users")
+	const result = await base("users")
 		.select({
-			fields: ["name", "discordUID", "Offer Descriptions"],
+			fields: ["name", "discordUID", "offerDescriptions"],
 		})
 		.firstPage();
 	return result.map((r) => ({
@@ -64,16 +64,16 @@ export const listUsers = async () => {
 };
 
 export const createOffer = async (userID: string, description: string) => {
-	await base("Offers").create({ description, User: [userID] });
+	await base("offers").create({ description, user: [userID] });
 };
 
 export const listOffers = async (userID?: string) => {
 	const options: QueryParams<FieldSet> = {};
 	if (userID) {
-		options.filterByFormula = `{User} = ${airtableEscapeString(userID)}`;
+		options.filterByFormula = `{user} = ${airtableEscapeString(userID)}`;
 		console.log(options);
 	}
-	const result = await base("Offers")
+	const result = await base("offers")
 		.select({
 			...options,
 		})
