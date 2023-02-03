@@ -24,7 +24,13 @@
 		{#each data.offers as offer}
 			<li>
 				<div><b>Offer:</b> {offer.description}</div>
-				<div><b>User:</b> <a href="/user/{encodeURIComponent(offer.userID)}">{offer.name}</a></div>
+				{#if offer.userID}
+					<div>
+						<b>User:</b> <a href="/user/{encodeURIComponent(offer.userID)}">{offer.name}</a>
+					</div>
+				{:else}
+					<div><b>User:</b> <i>missing</i></div>
+				{/if}
 			</li>
 		{/each}
 	</ul>
