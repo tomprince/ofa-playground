@@ -10,7 +10,7 @@ import {
 	InteractionType,
 	type APIApplicationCommandInteractionDataStringOption,
 	type APIInteraction,
-} from "discord.js";
+} from "discord-api-types/v10";
 import { channelMessage } from "$lib/discord";
 
 const verifyRequest = async (request: Request) => {
