@@ -10,8 +10,8 @@ export const commands = [
 		type: ApplicationCommandType.ChatInput,
 	},
 	{
-		name: "count",
-		description: "Count",
+		name: "whoami",
+		description: "Report who the bot thinks you are.",
 		type: ApplicationCommandType.ChatInput,
 	},
 	{
