@@ -10,6 +10,7 @@ import {
 	addDoc,
 	type CollectionReference,
 	type Query,
+	type Firestore,
 } from "firebase/firestore/lite";
 
 import { dev } from "$app/environment";
@@ -18,6 +19,34 @@ import { building } from "$app/environment";
 
 type User = { name: string; discordUID: string };
 type Offer = { description: string };
+
+export class OAuthToken {
+	type = "OAuth" as const;
+	headers = new Map();
+
+	constructor(value: string) {
+		this.headers.set("Authorization", `Bearer ${value}`);
+	}
+}
+export class OAuthTokenCredentialsProvider {
+	private token;
+	constructor(token: string) {
+		this.token = new OAuthToken(token);
+	}
+
+	getToken(): Promise<OAuthToken> {
+		return Promise.resolve(this.token);
+	}
+
+	invalidateToken = (): void => undefined;
+	start = (): void => undefined;
+	shutdown = (): void => undefined;
+}
+
+const useServiceAccount = (db: Firestore, token: string) => {
+	(db as unknown as { _authCredentials: OAuthTokenCredentialsProvider })._authCredentials =
+	new OAuthTokenCredentialsProvider(token);
+}
 
 const init = () => {
 	if (dev) {
@@ -29,6 +58,7 @@ const init = () => {
 	}
 	const app = initializeApp(JSON.parse(env.VITE_FIREBASE_CONFIG));
 	const db = getFirestore(app);
+	useServiceAccount(db, env.VITE_FIREBASE_SERVICE_TOKEN);
 	return {
 		db,
 		users: collection(db, "users") as CollectionReference<User>,
