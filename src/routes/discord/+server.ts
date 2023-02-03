@@ -15,7 +15,7 @@ import { channelMessage } from "$lib/discord";
 
 const verifyRequest = async (request: Request) => {
 	const body = await request.text();
-	if (request.headers.get("x-ngrok")) {
+	if (import.meta.env.MODE == "cloudflare" || request.headers.get("x-ngrok")) {
 		const signature = request.headers.get("X-Signature-Ed25519");
 		const timestamp = request.headers.get("X-Signature-Timestamp");
 		if (signature == null || timestamp == null) {
