@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { REST, Routes } from "discord.js";
 import { parse } from "dotenv";
-import { commands } from "./lib/commands";
+import { commands } from "./lib/commands.js";
 
 const config = parse(fs.readFileSync(".env"));
 
