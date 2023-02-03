@@ -1,0 +1,48 @@
+name: Check Linting And Formatting
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        name: Configure npm caching
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/workflows/linting.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: Install dependencies
+        run: |-
+          npm ci
+      - name: Lint
+        run: |-
+          npm run lint
+  svelte-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        name: Configure npm caching
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/workflows/linting.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: Install dependencies
+        run: |-
+          npm ci
+      - name: Copy example env
+        run: |-
+          cp .env.example .env
+      - name: Svelte check
+        run: |-
+          npm run check
