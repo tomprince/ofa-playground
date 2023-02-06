@@ -112,7 +112,7 @@ export const getUser = async (userID: string): Promise<({ id: string } & User) |
 	}
 };
 
-export const listUsers = async () => {
+export const listUsers = async () : Promise<({id: string} & User)[]> => {
 	const result = await getDocs(firebase.users);
 	return result.docs.map((r) => ({
 		id: r.id,
