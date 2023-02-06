@@ -3,7 +3,7 @@ import type { RequestHandler } from "./$types";
 import { error, json } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 
-import { addUser, createOffer, getUserFromDiscord } from "$lib/firestore.server";
+import { addUser, createOffer, getUserFromDiscord } from "$lib/supabase.server";
 import {
 	ApplicationCommandType,
 	InteractionResponseType,
@@ -71,7 +71,9 @@ export const POST: RequestHandler = async ({ request }) => {
 				const userName = (data.options as [APIApplicationCommandInteractionDataStringOption])[0]
 					.value;
 				try {
-					await addUser(userName, discordUID);
+					if (!await addUser(userName, discordUID)) {
+						return channelMessage("Already registered!");
+					};
 				} catch (e) {
 					console.error(e);
 					return channelMessage(`Failed to create record.`);

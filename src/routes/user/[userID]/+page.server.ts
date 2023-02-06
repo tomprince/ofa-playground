@@ -1,5 +1,5 @@
 import type { PageServerLoad } from "./$types";
-import { getUser, listOffers } from "$lib/firestore.server";
+import { getUser, listOffers } from "$lib/supabase.server";
 import { error } from "@sveltejs/kit";
 
 export const load = (async ({ params: { userID } }) => {

@@ -15,7 +15,7 @@
 			<li>
 				<div><a href="/user/{encodeURIComponent(user.id)}">Link</a></div>
 				<div><b>Name:</b> {user.name}</div>
-				<div><b>Discord UID:</b> {user.discordUID}</div>
+				<div><b>Discord UID:</b> {user.discord_uid}</div>
 			</li>
 		{/each}
 	</ul>
@@ -24,9 +24,9 @@
 		{#each data.offers as offer}
 			<li>
 				<div><b>Offer:</b> {offer.description}</div>
-				{#if offer.userID}
+				{#if offer.user_id}
 					<div>
-						<b>User:</b> <a href="/user/{encodeURIComponent(offer.userID)}">{offer.name}</a>
+						<b>User:</b> <a href="/user/{encodeURIComponent(offer.user_id)}">{offer.name}</a>
 					</div>
 				{:else}
 					<div><b>User:</b> <i>missing</i></div>
