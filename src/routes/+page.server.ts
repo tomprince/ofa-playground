@@ -1,8 +1,9 @@
 import type { PageServerLoad } from "./$types";
-import { listOffers, listUsers } from "$lib/supabase.server";
+import { connectSession } from "$lib/supabase.server";
 
-export const load = (async () => {
-	const [users, offers] = await Promise.all([listUsers(), listOffers()]);
+export const load = (async ({ cookies }) => {
+	const client = connectSession(cookies);
+	const [users, offers] = await Promise.all([client.listUsers(), client.listOffers()]);
 	return {
 		users,
 		offers,

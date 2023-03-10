@@ -1,6 +1,21 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
 	export let data: PageData;
+	import { env } from "$env/dynamic/public";
+	import type { RESTOAuth2AuthorizationQuery } from "discord-api-types/v10";
+
+	const getLoginURL = () => {
+		const params: Readonly<RESTOAuth2AuthorizationQuery> = {
+			client_id: env.PUBLIC_DISCORD_CLIENT_ID,
+			redirect_uri: "http://localhost:8080/login/discord",
+			response_type: "code",
+			scope: "identify",
+			prompt: "none",
+		};
+		const url = new URL("https://discord.com/api/oauth2/authorize");
+		url.search = new URLSearchParams(params).toString();
+		return url;
+	};
 </script>
 
 <svelte:head>
@@ -9,6 +24,7 @@
 </svelte:head>
 
 <section>
+	<a href={getLoginURL().toString()}>Login with Discord</a>
 	<h2>Users</h2>
 	<ul>
 		{#each data.users as user}

@@ -1,5 +1,6 @@
 import fs from "node:fs";
-import { REST, Routes } from "discord.js";
+import { REST } from "@discordjs/rest";
+import { Routes } from "discord-api-types/v10";
 import { parse } from "dotenv";
 import { commands } from "./lib/commands.js";
 
