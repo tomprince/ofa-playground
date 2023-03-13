@@ -19,8 +19,9 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		throw error(500, "Code not received from discord.");
 	}
 
-    const redirect_uri = new URL(url);
-    redirect_uri.search = "";
+	const redirect_uri = new URL(url);
+	redirect_uri.search = "";
+	console.log(redirect_uri.toString());
 	const discordToken = await exchangeOAuthCode(code, redirect_uri);
 
 	const userInfo = await getUserInfo(discordToken);
