@@ -19,7 +19,9 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		throw error(500, "Code not received from discord.");
 	}
 
-	const discordToken = await exchangeOAuthCode(code);
+    const redirect_uri = new URL(url);
+    redirect_uri.search = "";
+	const discordToken = await exchangeOAuthCode(code, redirect_uri);
 
 	const userInfo = await getUserInfo(discordToken);
 	console.log(userInfo);
@@ -54,7 +56,7 @@ class DiscordToken {
 	}
 }
 
-async function exchangeOAuthCode(code: string): Promise<DiscordToken> {
+async function exchangeOAuthCode(code: string, redirect_uri: URL): Promise<DiscordToken> {
 	const response: RESTPostOAuth2AccessTokenResult = await makeRequest(
 		Routes.oauth2TokenExchange(),
 		{
@@ -64,7 +66,7 @@ async function exchangeOAuthCode(code: string): Promise<DiscordToken> {
 				client_secret: env.VITE_DISCORD_CLIENT_SECRET,
 				grant_type: "authorization_code",
 				code: code,
-				redirect_uri: "http://localhost:8080/login/discord",
+				redirect_uri: redirect_uri.toString(),
 			}),
 		},
 	);
