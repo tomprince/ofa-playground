@@ -10,7 +10,7 @@
 
 <section>
 	<div><b>Name:</b> {data.user.name}</div>
-	<div><b>Discord UID:</b> {data.user.discordUID}</div>
+	<div><b>Discord UID:</b> {data.user.discord_uid}</div>
 	<hr />
 	<h2>Offers</h2>
 	<ul>

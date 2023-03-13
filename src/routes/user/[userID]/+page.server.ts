@@ -1,14 +1,15 @@
 import type { PageServerLoad } from "./$types";
-import { getUser, listOffers } from "$lib/firestore.server";
+import { connectSession } from "$lib/supabase.server";
 import { error } from "@sveltejs/kit";
 
-export const load = (async ({ params: { userID } }) => {
-	const user = await getUser(userID);
+export const load = (async ({ cookies, params: { userID } }) => {
+	const client = connectSession(cookies);
+	const [user, offers] = await Promise.all([client.getUser(userID), client.listOffers(userID)]);
 	if (!user) {
 		throw error(404, "No such user.");
 	}
 	return {
 		user,
-		offers: await listOffers(userID),
+		offers,
 	};
 }) satisfies PageServerLoad;

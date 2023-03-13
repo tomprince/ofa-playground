@@ -1,12 +1,9 @@
 import type { PageServerLoad } from "./$types";
-import { listOffers, listUsers } from "$lib/firestore.server";
+import { connectSession } from "$lib/supabase.server";
 
-export const load = (async () => {
-	const users = await listUsers();
-	const offers = (await listOffers()).map((offer) => ({
-		...offer,
-		name: users.find((user) => user.id === offer.userID)?.name,
-	}));
+export const load = (async ({ cookies }) => {
+	const client = connectSession(cookies);
+	const [users, offers] = await Promise.all([client.listUsers(), client.listOffers()]);
 	return {
 		users,
 		offers,

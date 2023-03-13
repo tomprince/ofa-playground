@@ -1,7 +1,7 @@
-import { ApplicationCommandOptionType, ApplicationCommandType } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandType } from "discord-api-types/v10";
 
 /**
- * @type{Partial<import('discord.js').APIApplicationCommand>[]}
+ * @type{Partial<import('discord-api-types/v10').APIApplicationCommand>[]}
  */
 export const commands = [
 	{

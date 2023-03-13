@@ -3,7 +3,7 @@ import type { RequestHandler } from "./$types";
 import { error, json } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 
-import { addUser, createOffer, getUserFromDiscord } from "$lib/firestore.server";
+import { connectWithDiscordUID } from "$lib/supabase.server";
 import {
 	ApplicationCommandType,
 	InteractionResponseType,
@@ -47,7 +47,14 @@ export const POST: RequestHandler = async ({ request }) => {
 		const { data } = interaction;
 		const discordUID = interaction.member?.user.id || interaction.user?.id;
 
-		const user = discordUID && (await getUserFromDiscord(discordUID));
+		if (!discordUID) {
+			console.log("Did not receive discord UID in message.");
+			return channelMessage("I don't know who you are. (internal error)");
+		}
+
+		const client = await connectWithDiscordUID(discordUID);
+
+		const user = await client.getUserFromDiscord(discordUID);
 
 		switch (data.name) {
 			case "ping": {
@@ -64,14 +71,13 @@ export const POST: RequestHandler = async ({ request }) => {
 				if (user) {
 					console.log("Already registered", user);
 				}
-				if (!discordUID) {
-					return channelMessage("Not invoked by a user!?");
-				}
 				// User's object choice
 				const userName = (data.options as [APIApplicationCommandInteractionDataStringOption])[0]
 					.value;
 				try {
-					await addUser(userName, discordUID);
+					if (!(await client.addUser(userName, discordUID))) {
+						return channelMessage("Already registered!");
+					}
 				} catch (e) {
 					console.error(e);
 					return channelMessage(`Failed to create record.`);
@@ -84,7 +90,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				}
 				const description = (data.options as [APIApplicationCommandInteractionDataStringOption])[0]
 					.value;
-				await createOffer(user.id, description);
+				await client.createOffer(user.id, description);
 				return channelMessage("Offer created.");
 			}
 		}
