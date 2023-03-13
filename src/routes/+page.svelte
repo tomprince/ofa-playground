@@ -29,6 +29,7 @@
 
 <section>
 	<a href={getLoginURL()}>Login with Discord</a>
+	{JSON.stringify(data.token)}
 	<h2>Users</h2>
 	<ul>
 		{#each data.users as user}

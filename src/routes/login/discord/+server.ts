@@ -22,6 +22,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	const discordToken = await exchangeOAuthCode(code);
 
 	const userInfo = await getUserInfo(discordToken);
+	console.log(userInfo);
 
 	cookies.set("supabase_token", await discordJWT(userInfo.id), { path: "/", maxAge: 3600 });
 	throw redirect(303, "/");
@@ -30,7 +31,9 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 async function makeRequest<ResponseType>(route: string, init: RequestInit): Promise<ResponseType> {
 	const response = await fetch(`${RouteBases.api}/${route}`, init);
 	if (!response.ok) {
-		throw response.json();
+		const json = response.json();
+		console.log(json);
+		throw json;
 	}
 	return response.json();
 }
