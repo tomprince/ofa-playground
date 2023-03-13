@@ -48,7 +48,7 @@ export const discordJWT = async (discord_uid: string) => {
 		.setIssuedAt()
 		.setIssuer("discord-bot")
 		.setAudience("authenticated")
-		.setExpirationTime("10m")
+		.setExpirationTime("1h")
 		.sign(JWT_SECRET);
 };
 

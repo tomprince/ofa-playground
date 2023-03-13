@@ -23,7 +23,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 
 	const userInfo = await getUserInfo(discordToken);
 
-	cookies.set("supabase_token", await discordJWT(userInfo.id), { path: "/" });
+	cookies.set("supabase_token", await discordJWT(userInfo.id), { path: "/", maxAge: 3600 });
 	throw redirect(303, "/");
 };
 
