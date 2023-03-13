@@ -59,6 +59,13 @@ class DiscordToken {
 }
 
 async function exchangeOAuthCode(code: string, redirect_uri: URL): Promise<DiscordToken> {
+    console.log({
+        client_id: publicEnv.PUBLIC_DISCORD_CLIENT_ID,
+        client_secret: env.VITE_DISCORD_CLIENT_SECRET,
+        grant_type: "authorization_code",
+        code: code,
+        redirect_uri: redirect_uri.toString(),
+    })
 	const response: RESTPostOAuth2AccessTokenResult = await makeRequest(
 		Routes.oauth2TokenExchange(),
 		{
