@@ -62,7 +62,7 @@ export const connectSession = (cookies: Cookies) => {
 };
 
 class Client {
-	constructor(private rest: PostgrestClient<Database>) { }
+	constructor(private rest: import("@supabase/postgrest-js").PostgrestClient<Database>) {}
 
 	async addUser(name: string, discord_uid: string): Promise<boolean> {
 		const { error } = await this.rest.from("users").insert({ name, discord_uid });
@@ -135,7 +135,7 @@ class Client {
 			id: r.id,
 			user_id: r.user_id,
 			description: r.description,
-			name: r.user.name,
+			name: (r.user as { name: string }).name,
 		}));
 	}
 }
