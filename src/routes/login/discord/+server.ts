@@ -76,7 +76,7 @@ async function exchangeOAuthCode(code: string, redirect_uri: URL): Promise<Disco
 				grant_type: "authorization_code",
 				code: code,
 				redirect_uri: redirect_uri.toString(),
-			}),
+			}).toString(),
 		},
 	);
 	return new DiscordToken(response);
