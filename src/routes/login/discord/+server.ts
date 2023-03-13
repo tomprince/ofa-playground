@@ -32,6 +32,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 };
 
 async function makeRequest<ResponseType>(route: string, init: RequestInit): Promise<ResponseType> {
+	console.log(init);
 	const response = await fetch(`${RouteBases.api}/${route}`, init);
 	if (!response.ok) {
 		const json = await response.json();
