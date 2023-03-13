@@ -3,18 +3,22 @@
 	export let data: PageData;
 	import { env } from "$env/dynamic/public";
 	import type { RESTOAuth2AuthorizationQuery } from "discord-api-types/v10";
+	import { browser } from "$app/environment";
 
 	const getLoginURL = () => {
+		if (!browser) {
+			return null;
+		}
 		const params: Readonly<RESTOAuth2AuthorizationQuery> = {
 			client_id: env.PUBLIC_DISCORD_CLIENT_ID,
-			redirect_uri: "http://localhost:8080/login/discord",
+			redirect_uri: new URL("/login/discord", document.baseURI).toString(),
 			response_type: "code",
 			scope: "identify",
 			prompt: "none",
 		};
 		const url = new URL("https://discord.com/api/oauth2/authorize");
 		url.search = new URLSearchParams(params).toString();
-		return url;
+		return url.toString();
 	};
 </script>
 
@@ -24,7 +28,7 @@
 </svelte:head>
 
 <section>
-	<a href={getLoginURL().toString()}>Login with Discord</a>
+	<a href={getLoginURL()}>Login with Discord</a>
 	<h2>Users</h2>
 	<ul>
 		{#each data.users as user}
