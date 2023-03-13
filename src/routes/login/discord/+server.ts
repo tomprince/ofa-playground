@@ -21,6 +21,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 
 	const redirect_uri = new URL(url);
 	redirect_uri.search = "";
+	console.log(redirect_uri.toString());
 	const discordToken = await exchangeOAuthCode(code, redirect_uri);
 
 	const userInfo = await getUserInfo(discordToken);
