@@ -5,7 +5,7 @@ import { error, redirect } from "@sveltejs/kit";
 import { discordJWT } from "$lib/supabase.server";
 
 import {
-	type RESTGetAPIOAuth2CurrentAuthorizationResult,
+	type RESTGetAPICurrentUserResult,
 	type RESTPostOAuth2AccessTokenResult,
 	Routes,
 	RouteBases,
@@ -21,13 +21,9 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 
 	const discordToken = await exchangeOAuthCode(code);
 
-	const authInfo = await getUserInfo(discordToken);
+	const userInfo = await getUserInfo(discordToken);
 
-	if (!authInfo.user) {
-		throw error(401, "User not identified.");
-	}
-
-	cookies.set("supabase_token", await discordJWT(authInfo.user.id), { path: "/" });
+	cookies.set("supabase_token", await discordJWT(userInfo.id), { path: "/" });
 	throw redirect(303, "/");
 };
 
@@ -36,9 +32,7 @@ async function makeRequest<ResponseType>(route: string, init: RequestInit): Prom
 	return response.json();
 }
 
-async function getUserInfo(
-	discordToken: DiscordToken,
-): Promise<RESTGetAPIOAuth2CurrentAuthorizationResult> {
+async function getUserInfo(discordToken: DiscordToken): Promise<RESTGetAPICurrentUserResult> {
 	return makeRequest(Routes.user(), {
 		headers: discordToken.getHeaders(),
 	});
