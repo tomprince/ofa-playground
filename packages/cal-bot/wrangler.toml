@@ -1,0 +1,8 @@
+name = "ofa-cal"
+main = "src/index.ts"
+compatibility_date = "2023-03-25"
+keep_vars = true
+workers_dev = false
+
+[triggers]
+crons = [ "1 * * * *" ]
