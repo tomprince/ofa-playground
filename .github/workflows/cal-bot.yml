@@ -1,0 +1,30 @@
+name: Deploy cal-bot
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        name: Configure npm caching
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/workflows/cal-bot.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: Install dependencies
+        run: |-
+          npm ci
+      - name: Deploy
+        run: |-
+          cd packages/cal-bot
+          npm run deploy -- ${{ (github.event_name == 'pull_request') && '--dry-run' || ''}}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
