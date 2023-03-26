@@ -51,14 +51,34 @@ async function updateCalendar({
 	await insertCalendarList(googleToken, calendar_id);
 
 	for (const discordEvent of discordEvents) {
-		const start = Date.parse(discordEvent.scheduled_start_time);
-		const end = new Date(start + 60 * 60 * 1000);
+		let end_time;
+		if (discordEvent.scheduled_end_time) {
+			end_time = discordEvent.scheduled_end_time;
+		} else {
+			const start = Date.parse(discordEvent.scheduled_start_time);
+			end_time = new Date(start + 60 * 60 * 1000).toISOString();
+		}
+
+		let location;
+		if (discordEvent.entity_metadata?.location) {
+			location = discordEvent.entity_metadata.location;
+		} else if (discordEvent.channel_id) {
+			location = `https://discord.com/channels/${discordEvent.guild_id}/${discordEvent.channel_id}`;
+		}
+
+		let description = discordEvent.description || "";
+		if (description) {
+			description += "\n\n";
+		}
+		description += `Discord Link: https://discord.com/events/${discordEvent.guild_id}/${discordEvent.id}`;
+
 		const event = {
-			id: discordEvents[0].id,
+			id: discordEvent.id,
 			start: { dateTime: discordEvent.scheduled_start_time },
-			end: { dateTime: end.toISOString() },
+			end: { dateTime: end_time },
 			summary: discordEvent.name,
-			description: discordEvent.description,
+			description,
+			location,
 		};
 		try {
 			console.log(await patchEvent(googleToken, calendar_id, event.id, event));
