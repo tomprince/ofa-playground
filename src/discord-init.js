@@ -10,7 +10,7 @@ process.on("unhandledRejection", (error) => {
 	console.error("Unhandled promise rejection:", error);
 });
 
-const rest = new REST({ version: "10" }).setToken(config.DISCORD_BOT_TOKEN);
+const rest = new REST({ version: "10" }).setToken(config.VITE_DISCORD_BOT_TOKEN);
 
 // rest.on("restDebug", console.log)
 console.log(
