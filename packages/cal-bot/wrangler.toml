@@ -5,7 +5,7 @@ keep_vars = true
 workers_dev = false
 
 kv_namespaces = [
-  { binding = "GUILDS", id = "18c1bf66a41b423e90458c51024c1f1c", preview_id = "18c1bf66a41b423e90458c51024c1f1c" }
+  { binding = "GUILDS", id = "a042c5e627cf42bfa4be510355314de8", preview_id = "70993ba0bdec4bacbf8ea241c848c742" }
 ]
 
 [env.local]
