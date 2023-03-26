@@ -19,7 +19,7 @@ interface TokenInfo {
 	token_type: string;
 }
 
-class GoogleToken {
+export class GoogleToken {
 	constructor(private data: TokenInfo) {}
 
 	getHeaders() {

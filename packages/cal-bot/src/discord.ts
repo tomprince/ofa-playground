@@ -1,4 +1,9 @@
-import { Routes, RouteBases, RESTGetAPIGuildScheduledEventsResult } from "discord-api-types/v10";
+import {
+	Routes,
+	RouteBases,
+	RESTGetAPIGuildScheduledEventsResult,
+	RESTGetAPICurrentUserGuildsResult,
+} from "discord-api-types/v10";
 
 export async function makeRequest<ResponseType>(
 	route: string,
@@ -17,7 +22,7 @@ interface TokenInfo {
 	token_type: string;
 }
 
-class DiscordToken {
+export class DiscordToken {
 	constructor(private data: TokenInfo) {}
 
 	getHeaders() {
@@ -39,6 +44,14 @@ export async function guildScheduledEvents(
 	guildId: string,
 ): Promise<RESTGetAPIGuildScheduledEventsResult> {
 	return makeRequest(Routes.guildScheduledEvents(guildId), {
+		headers: discordToken.getHeaders(),
+	});
+}
+
+export async function userGuilds(
+	discordToken: DiscordToken,
+): Promise<RESTGetAPICurrentUserGuildsResult> {
+	return makeRequest(Routes.userGuilds(), {
 		headers: discordToken.getHeaders(),
 	});
 }
