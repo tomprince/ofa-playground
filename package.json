@@ -34,9 +34,9 @@
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
 		"tslib": "^2.4.1",
-		"typescript": "^4.9.3",
+		"typescript": "^5.0.2",
 		"vite": "^4.0.0",
-		"vitest": "^0.25.3"
+		"vitest": "^0.29.7"
 	},
 	"type": "module",
 	"dependencies": {
@@ -45,5 +45,8 @@
 		"dotenv": "^16.0.3",
 		"jose": "^4.11.4",
 		"supabase": "^1.36.6"
-	}
+	},
+	"workspaces": [
+		"packages/cal-bot"
+	]
 }
