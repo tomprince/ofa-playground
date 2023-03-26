@@ -1,4 +1,4 @@
-name: Deploy cal-bot
+name: Deploy cal-bot ${{ (github.event_name == 'pull_request') && '(dry run)' || ''}}
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |-
           npm ci
-      - name: Deploy
+      - name: Deploy ${{ (github.event_name == 'pull_request') && '(dry run)' || ''}}
         run: |-
           cd packages/cal-bot
           npm run deploy -- ${{ (github.event_name == 'pull_request') && '--dry-run' || ''}}
