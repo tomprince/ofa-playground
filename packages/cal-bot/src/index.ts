@@ -10,8 +10,14 @@
  * Learn more at https://developers.cloudflare.com/workers/runtime-apis/scheduled-event/
  */
 
-import { DiscordToken, getBotToken, guildScheduledEvents, userGuilds } from "./discord.js";
-import { getServiceToken, GoogleToken, patchEvent } from "./google.js";
+import { type DiscordToken, getBotToken, guildScheduledEvents, userGuilds } from "./discord.js";
+import {
+	getServiceToken,
+	type GoogleToken,
+	insertEvent,
+	insertCalendarList,
+	patchEvent,
+} from "./google.js";
 
 interface Secrets {
 	DISCORD_BOT_TOKEN: string;
@@ -42,6 +48,8 @@ async function updateCalendar({
 }) {
 	const discordEvents = await guildScheduledEvents(discordToken, guild_id);
 
+	await insertCalendarList(googleToken, calendar_id);
+
 	for (const discordEvent of discordEvents) {
 		const start = Date.parse(discordEvent.scheduled_start_time);
 		const end = new Date(start + 60 * 60 * 1000);
@@ -52,7 +60,11 @@ async function updateCalendar({
 			summary: discordEvent.name,
 			description: discordEvent.description,
 		};
-		console.log(await patchEvent(googleToken, calendar_id, event.id, event));
+		try {
+			console.log(await patchEvent(googleToken, calendar_id, event.id, event));
+		} catch {
+			console.log(await insertEvent(googleToken, calendar_id, event));
+		}
 	}
 }
 
